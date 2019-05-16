@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="stockTrackingSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="tblDebit">
+    <Key>
+      <PropertyRef Name="debitID" />
+    </Key>
+    <Property Name="debitID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="productID" Type="int" />
+    <Property Name="personID" Type="int" />
+    <Property Name="departmentID" Type="int" />
+  </EntityType>
+  <EntityType Name="tblDebitedStock">
+    <Key>
+      <PropertyRef Name="debitedStockID" />
+      <PropertyRef Name="debitID" />
+    </Key>
+    <Property Name="debitedStockID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="debitID" Type="int" Nullable="false" />
+    <Property Name="debitedQuantity" Type="int" />
+  </EntityType>
+  <EntityType Name="tblDepartment">
+    <Key>
+      <PropertyRef Name="departmentID" />
+    </Key>
+    <Property Name="departmentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="departmentName" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblPersons">
+    <Key>
+      <PropertyRef Name="personID" />
+    </Key>
+    <Property Name="personID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="personName" Type="nvarchar" MaxLength="50" />
+    <Property Name="personLastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="personBirthDate" Type="date" />
+    <Property Name="dateOfStart" Type="date" />
+    <Property Name="activityStatus" Type="bit" />
+    <Property Name="userID" Type="int" />
+    <Property Name="departmentID" Type="int" />
+  </EntityType>
+  <EntityType Name="tblProducts">
+    <Key>
+      <PropertyRef Name="productID" />
+    </Key>
+    <Property Name="productID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="productName" Type="nvarchar" MaxLength="50" />
+    <Property Name="productPurchasePrice" Type="money" />
+    <Property Name="productPurchaseDate" Type="date" />
+    <Property Name="productType" Type="nvarchar" MaxLength="50" />
+    <Property Name="productActivity" Type="bit" />
+    <Property Name="purchasedCompany" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblStock">
+    <Key>
+      <PropertyRef Name="stockID" />
+      <PropertyRef Name="productID" />
+    </Key>
+    <Property Name="stockID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="productID" Type="int" Nullable="false" />
+    <Property Name="quantity" Type="int" />
+  </EntityType>
+  <EntityType Name="tblTypes">
+    <Key>
+      <PropertyRef Name="typeID" />
+    </Key>
+    <Property Name="typeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblUsers">
+    <Key>
+      <PropertyRef Name="userID" />
+    </Key>
+    <Property Name="userID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userName" Type="nvarchar" MaxLength="50" />
+    <Property Name="password" Type="nvarchar" MaxLength="16" />
+  </EntityType>
+  <EntityType Name="tblUserType">
+    <Key>
+      <PropertyRef Name="userTypeID" />
+    </Key>
+    <Property Name="userTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userID" Type="int" Nullable="false" />
+    <Property Name="typeID" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_tblDebit_tblDepartment">
+    <End Role="tblDepartment" Type="Self.tblDepartment" Multiplicity="0..1" />
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblDepartment">
+        <PropertyRef Name="departmentID" />
+      </Principal>
+      <Dependent Role="tblDebit">
+        <PropertyRef Name="departmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblDebit_tblPersons">
+    <End Role="tblPersons" Type="Self.tblPersons" Multiplicity="0..1" />
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblPersons">
+        <PropertyRef Name="personID" />
+      </Principal>
+      <Dependent Role="tblDebit">
+        <PropertyRef Name="personID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblDebit_tblProducts">
+    <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="0..1" />
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProducts">
+        <PropertyRef Name="productID" />
+      </Principal>
+      <Dependent Role="tblDebit">
+        <PropertyRef Name="productID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblDebitedStock_tblDebit">
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="1" />
+    <End Role="tblDebitedStock" Type="Self.tblDebitedStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblDebit">
+        <PropertyRef Name="debitID" />
+      </Principal>
+      <Dependent Role="tblDebitedStock">
+        <PropertyRef Name="debitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPersons_tblDepartment">
+    <End Role="tblDepartment" Type="Self.tblDepartment" Multiplicity="0..1" />
+    <End Role="tblPersons" Type="Self.tblPersons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblDepartment">
+        <PropertyRef Name="departmentID" />
+      </Principal>
+      <Dependent Role="tblPersons">
+        <PropertyRef Name="departmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblStock_tblProducts">
+    <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="1" />
+    <End Role="tblStock" Type="Self.tblStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProducts">
+        <PropertyRef Name="productID" />
+      </Principal>
+      <Dependent Role="tblStock">
+        <PropertyRef Name="productID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUsers_tblPersons">
+    <End Role="tblPersons" Type="Self.tblPersons" Multiplicity="1" />
+    <End Role="tblUsers" Type="Self.tblUsers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="tblPersons">
+        <PropertyRef Name="personID" />
+      </Principal>
+      <Dependent Role="tblUsers">
+        <PropertyRef Name="userID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUserType_tblTypes">
+    <End Role="tblTypes" Type="Self.tblTypes" Multiplicity="1" />
+    <End Role="tblUserType" Type="Self.tblUserType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblTypes">
+        <PropertyRef Name="typeID" />
+      </Principal>
+      <Dependent Role="tblUserType">
+        <PropertyRef Name="typeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUserType_tblUsers">
+    <End Role="tblUsers" Type="Self.tblUsers" Multiplicity="1" />
+    <End Role="tblUserType" Type="Self.tblUserType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUsers">
+        <PropertyRef Name="userID" />
+      </Principal>
+      <Dependent Role="tblUserType">
+        <PropertyRef Name="userID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fc_Encryption" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar">
+    <Parameter Name="password" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_AddDebit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="productID" Type="int" Mode="In" />
+    <Parameter Name="personID" Type="int" Mode="In" />
+    <Parameter Name="quantity" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_AddProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="productName" Type="nvarchar" Mode="In" />
+    <Parameter Name="purchasedPrice" Type="money" Mode="In" />
+    <Parameter Name="purchasedDate" Type="date" Mode="In" />
+    <Parameter Name="productType" Type="nvarchar" Mode="In" />
+    <Parameter Name="quantity" Type="int" Mode="In" />
+    <Parameter Name="purchasedCompany" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_AddStock" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="productID" Type="int" Mode="In" />
+    <Parameter Name="amountToAdd" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_ChangePassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="personID" Type="int" Mode="In" />
+    <Parameter Name="newPassword" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_DebitDeletion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="debitID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_DebitedListOfDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="departmentID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_DebitedListOfPerson" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="personID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_EditDebit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="debitID" Type="int" Mode="In" />
+    <Parameter Name="productID" Type="int" Mode="In" />
+    <Parameter Name="personID" Type="int" Mode="In" />
+    <Parameter Name="quantity" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_EditProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="productID" Type="int" Mode="In" />
+    <Parameter Name="productName" Type="nvarchar" Mode="In" />
+    <Parameter Name="productPurchasePrice" Type="money" Mode="In" />
+    <Parameter Name="productPurchaseDate" Type="date" Mode="In" />
+    <Parameter Name="productType" Type="nvarchar" Mode="In" />
+    <Parameter Name="purchasedCompany" Type="nvarchar" Mode="In" />
+    <Parameter Name="quantity" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_Encoder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="password" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_ListAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_ListDebit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_ListDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_ListMyProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="personID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_ListPersonnel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_ListProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_PersonnelDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="personID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_ProductDeletion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="productID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="stockTrackingSystemModelStoreContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblDebit" EntityType="Self.tblDebit" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblDebitedStock" EntityType="Self.tblDebitedStock" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblDepartment" EntityType="Self.tblDepartment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPersons" EntityType="Self.tblPersons" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblProducts" EntityType="Self.tblProducts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblStock" EntityType="Self.tblStock" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblTypes" EntityType="Self.tblTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblUsers" EntityType="Self.tblUsers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblUserType" EntityType="Self.tblUserType" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_tblDebit_tblDepartment" Association="Self.FK_tblDebit_tblDepartment">
+      <End Role="tblDepartment" EntitySet="tblDepartment" />
+      <End Role="tblDebit" EntitySet="tblDebit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblDebit_tblPersons" Association="Self.FK_tblDebit_tblPersons">
+      <End Role="tblPersons" EntitySet="tblPersons" />
+      <End Role="tblDebit" EntitySet="tblDebit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblDebit_tblProducts" Association="Self.FK_tblDebit_tblProducts">
+      <End Role="tblProducts" EntitySet="tblProducts" />
+      <End Role="tblDebit" EntitySet="tblDebit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblDebitedStock_tblDebit" Association="Self.FK_tblDebitedStock_tblDebit">
+      <End Role="tblDebit" EntitySet="tblDebit" />
+      <End Role="tblDebitedStock" EntitySet="tblDebitedStock" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPersons_tblDepartment" Association="Self.FK_tblPersons_tblDepartment">
+      <End Role="tblDepartment" EntitySet="tblDepartment" />
+      <End Role="tblPersons" EntitySet="tblPersons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblStock_tblProducts" Association="Self.FK_tblStock_tblProducts">
+      <End Role="tblProducts" EntitySet="tblProducts" />
+      <End Role="tblStock" EntitySet="tblStock" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUsers_tblPersons" Association="Self.FK_tblUsers_tblPersons">
+      <End Role="tblPersons" EntitySet="tblPersons" />
+      <End Role="tblUsers" EntitySet="tblUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUserType_tblTypes" Association="Self.FK_tblUserType_tblTypes">
+      <End Role="tblTypes" EntitySet="tblTypes" />
+      <End Role="tblUserType" EntitySet="tblUserType" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUserType_tblUsers" Association="Self.FK_tblUserType_tblUsers">
+      <End Role="tblUsers" EntitySet="tblUsers" />
+      <End Role="tblUserType" EntitySet="tblUserType" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

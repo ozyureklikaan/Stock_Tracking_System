@@ -1,0 +1,470 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="stockTrackingSystemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="tblDebit">
+    <Key>
+      <PropertyRef Name="debitID" />
+    </Key>
+    <Property Name="debitID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="productID" Type="Int32" />
+    <Property Name="personID" Type="Int32" />
+    <Property Name="departmentID" Type="Int32" />
+    <NavigationProperty Name="tblDepartment" Relationship="Self.FK_tblDebit_tblDepartment" FromRole="tblDebit" ToRole="tblDepartment" />
+    <NavigationProperty Name="tblPersons" Relationship="Self.FK_tblDebit_tblPersons" FromRole="tblDebit" ToRole="tblPersons" />
+    <NavigationProperty Name="tblProducts" Relationship="Self.FK_tblDebit_tblProducts" FromRole="tblDebit" ToRole="tblProducts" />
+    <NavigationProperty Name="tblDebitedStock" Relationship="Self.FK_tblDebitedStock_tblDebit" FromRole="tblDebit" ToRole="tblDebitedStock" />
+  </EntityType>
+  <EntityType Name="tblDebitedStock">
+    <Key>
+      <PropertyRef Name="debitedStockID" />
+      <PropertyRef Name="debitID" />
+    </Key>
+    <Property Name="debitedStockID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="debitID" Type="Int32" Nullable="false" />
+    <Property Name="debitedQuantity" Type="Int32" />
+    <NavigationProperty Name="tblDebit" Relationship="Self.FK_tblDebitedStock_tblDebit" FromRole="tblDebitedStock" ToRole="tblDebit" />
+  </EntityType>
+  <EntityType Name="tblDepartment">
+    <Key>
+      <PropertyRef Name="departmentID" />
+    </Key>
+    <Property Name="departmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="departmentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblDebit" Relationship="Self.FK_tblDebit_tblDepartment" FromRole="tblDepartment" ToRole="tblDebit" />
+    <NavigationProperty Name="tblPersons" Relationship="Self.FK_tblPersons_tblDepartment" FromRole="tblDepartment" ToRole="tblPersons" />
+  </EntityType>
+  <EntityType Name="tblPersons">
+    <Key>
+      <PropertyRef Name="personID" />
+    </Key>
+    <Property Name="personID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="personName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="personLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="personBirthDate" Type="DateTime" Precision="0" />
+    <Property Name="dateOfStart" Type="DateTime" Precision="0" />
+    <Property Name="activityStatus" Type="Boolean" />
+    <Property Name="userID" Type="Int32" />
+    <Property Name="departmentID" Type="Int32" />
+    <NavigationProperty Name="tblDebit" Relationship="Self.FK_tblDebit_tblPersons" FromRole="tblPersons" ToRole="tblDebit" />
+    <NavigationProperty Name="tblDepartment" Relationship="Self.FK_tblPersons_tblDepartment" FromRole="tblPersons" ToRole="tblDepartment" />
+    <NavigationProperty Name="tblUsers" Relationship="Self.FK_tblUsers_tblPersons" FromRole="tblPersons" ToRole="tblUsers" />
+  </EntityType>
+  <EntityType Name="tblProducts">
+    <Key>
+      <PropertyRef Name="productID" />
+    </Key>
+    <Property Name="productID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="productName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="productPurchasePrice" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="productPurchaseDate" Type="DateTime" Precision="0" />
+    <Property Name="productType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="productActivity" Type="Boolean" />
+    <Property Name="purchasedCompany" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblDebit" Relationship="Self.FK_tblDebit_tblProducts" FromRole="tblProducts" ToRole="tblDebit" />
+    <NavigationProperty Name="tblStock" Relationship="Self.FK_tblStock_tblProducts" FromRole="tblProducts" ToRole="tblStock" />
+  </EntityType>
+  <EntityType Name="tblStock">
+    <Key>
+      <PropertyRef Name="stockID" />
+      <PropertyRef Name="productID" />
+    </Key>
+    <Property Name="stockID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="productID" Type="Int32" Nullable="false" />
+    <Property Name="quantity" Type="Int32" />
+    <NavigationProperty Name="tblProducts" Relationship="Self.FK_tblStock_tblProducts" FromRole="tblStock" ToRole="tblProducts" />
+  </EntityType>
+  <EntityType Name="tblTypes">
+    <Key>
+      <PropertyRef Name="typeID" />
+    </Key>
+    <Property Name="typeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblUserType" Relationship="Self.FK_tblUserType_tblTypes" FromRole="tblTypes" ToRole="tblUserType" />
+  </EntityType>
+  <EntityType Name="tblUsers">
+    <Key>
+      <PropertyRef Name="userID" />
+    </Key>
+    <Property Name="userID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="password" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblPersons" Relationship="Self.FK_tblUsers_tblPersons" FromRole="tblUsers" ToRole="tblPersons" />
+    <NavigationProperty Name="tblUserType" Relationship="Self.FK_tblUserType_tblUsers" FromRole="tblUsers" ToRole="tblUserType" />
+  </EntityType>
+  <EntityType Name="tblUserType">
+    <Key>
+      <PropertyRef Name="userTypeID" />
+    </Key>
+    <Property Name="userTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userID" Type="Int32" Nullable="false" />
+    <Property Name="typeID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="tblTypes" Relationship="Self.FK_tblUserType_tblTypes" FromRole="tblUserType" ToRole="tblTypes" />
+    <NavigationProperty Name="tblUsers" Relationship="Self.FK_tblUserType_tblUsers" FromRole="tblUserType" ToRole="tblUsers" />
+  </EntityType>
+  <Association Name="FK_tblDebit_tblDepartment">
+    <End Role="tblDepartment" Type="Self.tblDepartment" Multiplicity="0..1" />
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblDepartment">
+        <PropertyRef Name="departmentID" />
+      </Principal>
+      <Dependent Role="tblDebit">
+        <PropertyRef Name="departmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblDebit_tblPersons">
+    <End Role="tblPersons" Type="Self.tblPersons" Multiplicity="0..1" />
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblPersons">
+        <PropertyRef Name="personID" />
+      </Principal>
+      <Dependent Role="tblDebit">
+        <PropertyRef Name="personID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblDebit_tblProducts">
+    <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="0..1" />
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProducts">
+        <PropertyRef Name="productID" />
+      </Principal>
+      <Dependent Role="tblDebit">
+        <PropertyRef Name="productID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblDebitedStock_tblDebit">
+    <End Role="tblDebit" Type="Self.tblDebit" Multiplicity="1" />
+    <End Role="tblDebitedStock" Type="Self.tblDebitedStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblDebit">
+        <PropertyRef Name="debitID" />
+      </Principal>
+      <Dependent Role="tblDebitedStock">
+        <PropertyRef Name="debitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPersons_tblDepartment">
+    <End Role="tblDepartment" Type="Self.tblDepartment" Multiplicity="0..1" />
+    <End Role="tblPersons" Type="Self.tblPersons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblDepartment">
+        <PropertyRef Name="departmentID" />
+      </Principal>
+      <Dependent Role="tblPersons">
+        <PropertyRef Name="departmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUsers_tblPersons">
+    <End Role="tblPersons" Type="Self.tblPersons" Multiplicity="1" />
+    <End Role="tblUsers" Type="Self.tblUsers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="tblPersons">
+        <PropertyRef Name="personID" />
+      </Principal>
+      <Dependent Role="tblUsers">
+        <PropertyRef Name="userID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblStock_tblProducts">
+    <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="1" />
+    <End Role="tblStock" Type="Self.tblStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProducts">
+        <PropertyRef Name="productID" />
+      </Principal>
+      <Dependent Role="tblStock">
+        <PropertyRef Name="productID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUserType_tblTypes">
+    <End Role="tblTypes" Type="Self.tblTypes" Multiplicity="1" />
+    <End Role="tblUserType" Type="Self.tblUserType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblTypes">
+        <PropertyRef Name="typeID" />
+      </Principal>
+      <Dependent Role="tblUserType">
+        <PropertyRef Name="typeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUserType_tblUsers">
+    <End Role="tblUsers" Type="Self.tblUsers" Multiplicity="1" />
+    <End Role="tblUserType" Type="Self.tblUserType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUsers">
+        <PropertyRef Name="userID" />
+      </Principal>
+      <Dependent Role="tblUserType">
+        <PropertyRef Name="userID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="stockTrackingSystemEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="tblDebit" EntityType="Self.tblDebit" />
+    <EntitySet Name="tblDebitedStock" EntityType="Self.tblDebitedStock" />
+    <EntitySet Name="tblDepartment" EntityType="Self.tblDepartment" />
+    <EntitySet Name="tblPersons" EntityType="Self.tblPersons" />
+    <EntitySet Name="tblProducts" EntityType="Self.tblProducts" />
+    <EntitySet Name="tblStock" EntityType="Self.tblStock" />
+    <EntitySet Name="tblTypes" EntityType="Self.tblTypes" />
+    <EntitySet Name="tblUsers" EntityType="Self.tblUsers" />
+    <EntitySet Name="tblUserType" EntityType="Self.tblUserType" />
+    <AssociationSet Name="FK_tblDebit_tblDepartment" Association="Self.FK_tblDebit_tblDepartment">
+      <End Role="tblDepartment" EntitySet="tblDepartment" />
+      <End Role="tblDebit" EntitySet="tblDebit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblDebit_tblPersons" Association="Self.FK_tblDebit_tblPersons">
+      <End Role="tblPersons" EntitySet="tblPersons" />
+      <End Role="tblDebit" EntitySet="tblDebit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblDebit_tblProducts" Association="Self.FK_tblDebit_tblProducts">
+      <End Role="tblProducts" EntitySet="tblProducts" />
+      <End Role="tblDebit" EntitySet="tblDebit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblDebitedStock_tblDebit" Association="Self.FK_tblDebitedStock_tblDebit">
+      <End Role="tblDebit" EntitySet="tblDebit" />
+      <End Role="tblDebitedStock" EntitySet="tblDebitedStock" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPersons_tblDepartment" Association="Self.FK_tblPersons_tblDepartment">
+      <End Role="tblDepartment" EntitySet="tblDepartment" />
+      <End Role="tblPersons" EntitySet="tblPersons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUsers_tblPersons" Association="Self.FK_tblUsers_tblPersons">
+      <End Role="tblPersons" EntitySet="tblPersons" />
+      <End Role="tblUsers" EntitySet="tblUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblStock_tblProducts" Association="Self.FK_tblStock_tblProducts">
+      <End Role="tblProducts" EntitySet="tblProducts" />
+      <End Role="tblStock" EntitySet="tblStock" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUserType_tblTypes" Association="Self.FK_tblUserType_tblTypes">
+      <End Role="tblTypes" EntitySet="tblTypes" />
+      <End Role="tblUserType" EntitySet="tblUserType" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUserType_tblUsers" Association="Self.FK_tblUserType_tblUsers">
+      <End Role="tblUsers" EntitySet="tblUsers" />
+      <End Role="tblUserType" EntitySet="tblUserType" />
+    </AssociationSet>
+    <FunctionImport Name="sp_AddDebit">
+      <Parameter Name="productID" Mode="In" Type="Int32" />
+      <Parameter Name="personID" Mode="In" Type="Int32" />
+      <Parameter Name="quantity" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddProduct">
+      <Parameter Name="productName" Mode="In" Type="String" />
+      <Parameter Name="purchasedPrice" Mode="In" Type="Decimal" />
+      <Parameter Name="purchasedDate" Mode="In" Type="DateTime" />
+      <Parameter Name="productType" Mode="In" Type="String" />
+      <Parameter Name="quantity" Mode="In" Type="Int32" />
+      <Parameter Name="purchasedCompany" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddStock">
+      <Parameter Name="productID" Mode="In" Type="Int32" />
+      <Parameter Name="amountToAdd" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_ChangePassword">
+      <Parameter Name="personID" Mode="In" Type="Int32" />
+      <Parameter Name="newPassword" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DebitDeletion">
+      <Parameter Name="debitID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DebitedListOfDepartment" ReturnType="Collection(stockTrackingSystemModel.sp_DebitedListOfDepartment_Result)">
+      <Parameter Name="departmentID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DebitedListOfPerson" ReturnType="Collection(stockTrackingSystemModel.sp_DebitedListOfPerson_Result)">
+      <Parameter Name="personID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditDebit">
+      <Parameter Name="debitID" Mode="In" Type="Int32" />
+      <Parameter Name="productID" Mode="In" Type="Int32" />
+      <Parameter Name="personID" Mode="In" Type="Int32" />
+      <Parameter Name="quantity" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditProduct">
+      <Parameter Name="productID" Mode="In" Type="Int32" />
+      <Parameter Name="productName" Mode="In" Type="String" />
+      <Parameter Name="productPurchasePrice" Mode="In" Type="Decimal" />
+      <Parameter Name="productPurchaseDate" Mode="In" Type="DateTime" />
+      <Parameter Name="productType" Mode="In" Type="String" />
+      <Parameter Name="purchasedCompany" Mode="In" Type="String" />
+      <Parameter Name="quantity" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Encoder" ReturnType="Collection(String)">
+      <Parameter Name="password" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(stockTrackingSystemModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(stockTrackingSystemModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_ListAllProducts" ReturnType="Collection(stockTrackingSystemModel.sp_ListAllProducts_Result)" />
+    <FunctionImport Name="sp_ListDepartment" ReturnType="Collection(stockTrackingSystemModel.sp_ListDepartment_Result)" />
+    <FunctionImport Name="sp_ListMyProducts" ReturnType="Collection(stockTrackingSystemModel.sp_ListMyProducts_Result)">
+      <Parameter Name="personID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_ListPersonnel" ReturnType="Collection(stockTrackingSystemModel.sp_ListPersonnel_Result)" />
+    <FunctionImport Name="sp_ListProducts" ReturnType="Collection(stockTrackingSystemModel.sp_ListProducts_Result)" />
+    <FunctionImport Name="sp_PersonnelDetail" ReturnType="Collection(stockTrackingSystemModel.sp_PersonnelDetail_Result)">
+      <Parameter Name="personID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_ProductDeletion">
+      <Parameter Name="productID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+    <FunctionImport Name="sp_ListDebit" ReturnType="Collection(stockTrackingSystemModel.sp_ListDebit_Result)" />
+  </EntityContainer>
+  <ComplexType Name="sp_DebitedListOfDepartment_Result">
+    <Property Type="String" Name="Department" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="productID" Nullable="false" />
+    <Property Type="String" Name="productName" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="productPurchasePrice" Nullable="true" Precision="19" />
+    <Property Type="DateTime" Name="productPurchaseDate" Nullable="true" />
+    <Property Type="String" Name="productType" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="productActivity" Nullable="true" />
+    <Property Type="String" Name="purchasedCompany" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="sp_DebitedListOfPerson_Result">
+    <Property Type="String" Name="Person_Name" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="productID" Nullable="false" />
+    <Property Type="String" Name="productName" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="productPurchasePrice" Nullable="true" Precision="19" />
+    <Property Type="DateTime" Name="productPurchaseDate" Nullable="true" />
+    <Property Type="String" Name="productType" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="productActivity" Nullable="true" />
+    <Property Type="String" Name="purchasedCompany" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="sp_ListAllProducts_Result">
+    <Property Type="Int32" Name="productID" Nullable="false" />
+    <Property Type="String" Name="productName" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="productPurchasePrice" Nullable="true" Precision="19" />
+    <Property Type="DateTime" Name="productPurchaseDate" Nullable="true" />
+    <Property Type="String" Name="productType" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="productActivity" Nullable="true" />
+    <Property Type="String" Name="purchasedCompany" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="stockID" Nullable="false" />
+    <Property Type="Int32" Name="quantity" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_ListDepartment_Result">
+    <Property Type="Int32" Name="departmentID" Nullable="false" />
+    <Property Type="String" Name="departmentName" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="sp_ListMyProducts_Result">
+    <Property Type="Int32" Name="productID" Nullable="false" />
+    <Property Type="String" Name="productName" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="productPurchasePrice" Nullable="true" Precision="19" />
+    <Property Type="DateTime" Name="productPurchaseDate" Nullable="true" />
+    <Property Type="String" Name="productType" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="productActivity" Nullable="true" />
+    <Property Type="String" Name="purchasedCompany" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="debitID" Nullable="false" />
+    <Property Type="Int32" Name="personID" Nullable="false" />
+    <Property Type="String" Name="personName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="personLastName" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="personBirthDate" Nullable="true" />
+    <Property Type="DateTime" Name="dateOfStart" Nullable="true" />
+    <Property Type="Boolean" Name="activityStatus" Nullable="true" />
+    <Property Type="Int32" Name="departmentID" Nullable="true" />
+    <Property Type="Int32" Name="debitedStockID" Nullable="false" />
+    <Property Type="Int32" Name="debitedQuantity" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_ListPersonnel_Result">
+    <Property Type="Int32" Name="personID" Nullable="false" />
+    <Property Type="String" Name="personName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="personLastName" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="personBirthDate" Nullable="true" />
+    <Property Type="DateTime" Name="dateOfStart" Nullable="true" />
+    <Property Type="Boolean" Name="activityStatus" Nullable="true" />
+    <Property Type="String" Name="departmentName" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="sp_ListProducts_Result">
+    <Property Type="Int32" Name="productID" Nullable="false" />
+    <Property Type="String" Name="productName" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="productPurchasePrice" Nullable="true" Precision="19" />
+    <Property Type="DateTime" Name="productPurchaseDate" Nullable="true" />
+    <Property Type="String" Name="productType" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="productActivity" Nullable="true" />
+    <Property Type="String" Name="purchasedCompany" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="stockID" Nullable="false" />
+    <Property Type="Int32" Name="quantity" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_PersonnelDetail_Result">
+    <Property Type="Int32" Name="personID" Nullable="false" />
+    <Property Type="String" Name="personName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="personLastName" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="personBirthDate" Nullable="true" />
+    <Property Type="DateTime" Name="dateOfStart" Nullable="true" />
+    <Property Type="Boolean" Name="activityStatus" Nullable="true" />
+    <Property Type="String" Name="departmentName" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="sp_ListDebit_Result">
+    <Property Type="Int32" Name="productID" Nullable="false" />
+    <Property Type="String" Name="productName" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="productPurchasePrice" Nullable="true" Precision="19" />
+    <Property Type="DateTime" Name="productPurchaseDate" Nullable="true" />
+    <Property Type="String" Name="productType" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="purchasedCompany" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="personID" Nullable="false" />
+    <Property Type="String" Name="personName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="personLastName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="departmentID" Nullable="true" />
+    <Property Type="Int32" Name="debitID" Nullable="false" />
+    <Property Type="Int32" Name="debitedStockID" Nullable="false" />
+    <Property Type="Int32" Name="debitedQuantity" Nullable="true" />
+  </ComplexType>
+</Schema>
